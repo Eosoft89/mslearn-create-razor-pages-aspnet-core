@@ -1,0 +1,76 @@
+﻿@page
+@model ContosoPizza.Pages.PizzaListModel
+@{
+    ViewData["Title"] = "Pizza List 🍕";
+}
+
+<h1>Pizza List 🍕</h1>
+
+<!-- New Pizza form will go here -->
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div> <!-- El atributo asp-validation-summary se usa para mostrar errores de validación para todo el modelo. -->
+    <div class="form-group">
+        <label asp-for="NewPizza.Name" class="control-label"></label>
+        <input asp-for="NewPizza.Name" class="form-control"/>
+        <span asp-validation-for="NewPizza.Name" class="text-danger"></span> <!-- El atributo asp-validation-for se usa para mostrar cualquier error de validación para cada campo de formulario. -->
+    </div>
+    <div class="form-group">
+        <label asp-for="NewPizza.Size" class="control-label"></label>
+        <select asp-for="NewPizza.Size" class="form-control" id="PizzaSize">
+            <option value="">-- Select Size --</option>
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+            <option value="Large">Large</option>
+        </select>
+        <span asp-validation-for="NewPizza.Size" class="text-danger"></span>
+    </div>
+    <div class="form-group form-check">
+        <label class="form-check-label">
+            <input class="form-check-input" asp-for="NewPizza.IsGlutenFree"/> @Html.DisplayNameFor(model => model.NewPizza.IsGlutenFree) <!-- El método Html.DisplayNameFor se usa para mostrar el nombre de visualización de la propiedad IsGlutenFree. Se trata de un método auxiliar de Razor que se usa para mostrar el nombre de visualización de una propiedad. Con la etiqueta de esta forma, se garantiza que la casilla se active cuando el usuario haga clic en la etiqueta. -->
+        </label>
+    </div>
+    <div class="form-group">
+        <label asp-for="NewPizza.Price" class="control-label"></label>
+        <input asp-for="NewPizza.Price" class="form-control"/>
+        <span asp-validation-for="NewPizza.Price" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Create" class="btn btn-primary"> <!-- Un botón de envío etiquetado Create se agrega al formulario para publicar los datos de formulario en el servidor. En tiempo de ejecución, cuando el usuario selecciona este botón Crear, el explorador envía el formulario como una solicitud HTTP POST al servidor. -->
+    </div>
+</form>
+
+
+<!-- List of pizzas will go here -->
+
+<table class="table mt-5">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Size</th>
+            <th scope="col">Gluten Free</th>
+            <th scope="col">Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var pizza in Model.PizzaList)
+        {
+            <tr>
+                <td>@pizza.Name</td>
+                <td>@($"{pizza.Price:C}")</td>
+                <td>@pizza.Size</td>
+                <td>@(pizza.IsGlutenFree ? "✔️" : string.Empty)</td>
+                <td>
+                    <form method="post" asp-page-handler="Delete" asp-route-id="@pizza.Id"> <!-- asp-page-handler indica que el formulario se envía al controlador Delete, pasando el pizza.Id denotado por asp-route-id -->
+                        <button class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial"/>
+}

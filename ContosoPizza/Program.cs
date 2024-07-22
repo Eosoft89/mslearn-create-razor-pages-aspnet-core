@@ -9,6 +9,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddDbContext<PizzaContext>(options =>
     options.UseSqlite("Data Source=ContosoPizza.db"));
+builder.Services.AddScoped<PizzaService>(); // Inyección de dependencia de PizzaService. Ahora PizzaService se puede insertar en cualquier página de Razor
+//AddScoped indica que se debe crear un nuevo objeto PizzaService para cada solicitud HTTP
 
 var app = builder.Build();
 
